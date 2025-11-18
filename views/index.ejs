@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Visualisasi Data</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .gradient-header {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
+    <% if (error) { %>
+    <!-- Error View -->
+    <div class="min-h-screen bg-gradient-to-br from-red-50 to-pink-100 flex items-center justify-center px-4 py-8">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 sm:p-12 text-center max-w-md w-full mx-auto">
+            <div class="mb-6">
+                <i class="bi bi-exclamation-triangle text-red-500 text-8xl mb-4"></i>
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Error</h2>
+                <p class="text-gray-600 mb-8"><%= error %></p>
+            </div>
+            <a href="/" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition duration-200 flex items-center justify-center shadow-lg hover:shadow-xl">
+                <i class="bi bi-house mr-2 text-lg"></i>
+                Kembali ke Beranda
+            </a>
+        </div>
+    </div>
+    <% } else if (data && data.length > 0) { %>
+    <!-- Dashboard View -->
+    <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4 py-8">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-7xl mx-auto">
+            <div class="text-center mb-8">
+                <i class="bi bi-bar-chart-line text-blue-500 text-8xl mb-4"></i>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Dashboard Visualisasi Data</h1>
+                <p class="text-gray-600 mb-4">Grafik Interaktif & Analitik Data Anda</p>
+                <p class="text-sm text-gray-500 mb-8">Oleh: Ikhwan Maulana Ivansyah (NIM: SI20230016)</p>
+                <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border-2 border-dashed border-blue-300 hover:border-blue-500 transition-colors duration-300 w-full max-w-lg mx-auto">
+                    <div class="text-center mb-4">
+                        <i class="bi bi-cloud-upload text-blue-500 text-5xl mb-2"></i>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Upload File CSV</h3>
+                        <p class="text-sm text-gray-600">Pilih file CSV untuk memulai visualisasi data</p>
+                    </div>
+                    <form action="/upload" method="post" enctype="multipart/form-data">
+                        <div class="flex flex-col sm:flex-row items-center gap-3">
+                            <input type="file" name="csvfile" accept=".csv" class="block w-full text-sm text-gray-500 file:mr-4 file:py-3 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 file:cursor-pointer transition-colors">
+                            <button type="submit" class="w-full sm:w-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition duration-200 flex items-center justify-center whitespace-nowrap shadow-md hover:shadow-lg">
+                                <i class="bi bi-cloud-upload mr-2 text-lg"></i>
+                                <span class="hidden sm:inline">Upload CSV Baru</span>
+                                <span class="sm:hidden">Upload</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+    <% } else { %>
+    <!-- Welcome/Upload View -->
+    <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4 py-8">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 sm:p-12 text-center max-w-md w-full mx-auto">
+            <div class="mb-6">
+                <i class="bi bi-bar-chart-line text-blue-500 text-8xl mb-4"></i>
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Dashboard Visualisasi Data</h2>
+                <p class="text-gray-600 mb-8">Upload file CSV untuk membuat grafik interaktif dan menganalisis data Anda</p>
+            </div>
+            <form action="/upload" method="post" enctype="multipart/form-data">
+                <div class="mb-6">
+                    <input type="file" name="csvfile" accept=".csv" class="block w-full text-sm text-gray-500 file:mr-4 file:py-3 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 file:cursor-pointer transition-colors">
+                </div>
+                <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition duration-200 flex items-center justify-center shadow-lg hover:shadow-xl">
+                    <i class="bi bi-cloud-upload mr-2 text-lg"></i>
+                    Upload & Analisis
+                </button>
+            </form>
+            <div class="mt-6 text-gray-500 text-sm">
+                <small>Format yang didukung: File CSV dengan header</small>
+            </div>
+        </div>
+    </div>
+    <% } %>
+
+    <% if (data && data.length > 0) { %>
+    <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div class="container mx-auto px-4 py-8 max-w-7xl">
+            <!-- Metric Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h5 class="text-lg font-semibold mb-1 text-gray-700">Total Record</h5>
+                            <h2 class="text-3xl font-bold text-blue-600" id="totalRecords">0</h2>
+                            <small class="text-gray-500">Semua entri data</small>
+                        </div>
+                        <i class="bi bi-database text-blue-500 text-3xl"></i>
+                    </div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h5 class="text-lg font-semibold mb-1 text-gray-700">Kolom Numerik</h5>
+                            <h2 class="text-3xl font-bold text-green-600" id="totalColumns">0</h2>
+                            <small class="text-gray-500">Jumlah kolom yang berisi angka untuk analisis</small>
+                        </div>
+                        <i class="bi bi-table text-green-500 text-3xl"></i>
+                    </div>
+                </div>
+            </div>
+
+        <!-- Chart Selection Controls -->
+        <div class="bg-white rounded-xl p-6 shadow-lg mb-6 border border-gray-200">
+            <h4 class="text-xl font-bold mb-4 flex items-center gap-2 text-gray-800">
+                <i class="bi bi-sliders text-purple-500 text-2xl"></i>
+                Kontrol Chart
+            </h4>
+            <div class="flex flex-col sm:flex-row flex-wrap gap-4 items-start sm:items-center justify-center">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
+                    <label class="text-sm font-medium text-gray-700 whitespace-nowrap">Pilih Chart:</label>
+                    <select id="chartSelector" class="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white">
+                        <option value="all">Semua Chart</option>
+                        <option value="bar">Batang Vertikal</option>
+                        <option value="pie">Pie Chart</option>
+                        <option value="doughnut">Donat Chart</option>
+                        <option value="area">Area Chart</option>
+                        <option value="horizontal">Batang Horizontal</option>
+                        <option value="line">Line Chart</option>
+                    </select>
+                </div>
+                <div class="flex flex-wrap gap-2 justify-center sm:justify-start w-full sm:w-auto">
+                    <button id="showSelectedChart" class="flex-1 sm:flex-none px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition duration-200 flex items-center justify-center gap-2 min-w-[140px]">
+                        <i class="bi bi-eye text-lg"></i>
+                        <span class="hidden sm:inline">Tampilkan Chart</span>
+                        <span class="sm:hidden">Tampilkan</span>
+                    </button>
+                    <button id="showAllCharts" class="flex-1 sm:flex-none px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition duration-200 flex items-center justify-center gap-2 min-w-[140px]">
+                        <i class="bi bi-grid text-lg"></i>
+                        <span class="hidden sm:inline">Tampilkan Semua</span>
+                        <span class="sm:hidden">Semua</span>
+                    </button>
+                    <button id="hideAllCharts" class="flex-1 sm:flex-none px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg transition duration-200 flex items-center justify-center gap-2 min-w-[140px]">
+                        <i class="bi bi-eye-slash text-lg"></i>
+                        <span class="hidden sm:inline">Sembunyikan Semua</span>
+                        <span class="sm:hidden">Sembunyikan</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row 1 -->
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6 chart-row">
+            <div id="barChartContainer" class="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                <h4 class="text-xl font-bold mb-6 flex items-center gap-2 text-gray-800">
+                    <i class="bi bi-bar-chart text-blue-500 text-2xl"></i>
+                    Data Diagram Batang Vertikal
+                </h4>
+                <p class="text-sm text-gray-600 mb-4">Menampilkan total nilai untuk setiap kategori dalam dataset</p>
+                <canvas id="districtBarChart"></canvas>
+            </div>
+            <div id="pieChartContainer" class="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                <h4 class="text-xl font-bold mb-6 flex items-center gap-2 text-gray-800">
+                    <i class="bi bi-pie-chart text-green-500 text-2xl"></i>
+                    Data Diagram Pie
+                </h4>
+                <p class="text-sm text-gray-600 mb-4">Menampilkan distribusi persentase untuk setiap kolom data numerik</p>
+                <canvas id="vehicleTypePieChart"></canvas>
+            </div>
+        </div>
+
+
+
+        <!-- Charts Row 2 -->
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6 chart-row">
+            <div id="doughnutChartContainer" class="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                <h4 class="text-xl font-bold mb-6 flex items-center gap-2 text-gray-800">
+                    <i class="bi bi-circle text-indigo-500 text-2xl"></i>
+                    Data Diagram Donat
+                </h4>
+                <p class="text-sm text-gray-600 mb-4">Menampilkan distribusi persentase untuk setiap kolom data numerik dalam bentuk donat</p>
+                <canvas id="doughnutChart"></canvas>
+            </div>
+            <div id="areaChartContainer" class="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                <h4 class="text-xl font-bold mb-6 flex items-center gap-2 text-gray-800">
+                    <i class="bi bi-graph-up text-pink-500 text-2xl"></i>
+                    Data Diagram Area
+                </h4>
+                <p class="text-sm text-gray-600 mb-4">Menampilkan tren nilai total dalam bentuk area yang diisi</p>
+                <canvas id="areaChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Charts Row 3 -->
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6 chart-row">
+            <div id="horizontalBarChartContainer" class="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                <h4 class="text-xl font-bold mb-6 flex items-center gap-2 text-gray-800">
+                    <i class="bi bi-bar-chart-steps text-orange-500 text-2xl"></i>
+                    Data Diagram Batang Horizontal
+                </h4>
+                <p class="text-sm text-gray-600 mb-4">Menampilkan perbandingan nilai dalam orientasi horizontal untuk kemudahan pembacaan</p>
+                <canvas id="horizontalBarChart"></canvas>
+            </div>
+            <div id="lineChartContainer" class="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                <h4 class="text-xl font-bold mb-6 flex items-center gap-2 text-gray-800">
+                    <i class="bi bi-activity text-teal-500 text-2xl"></i>
+                    Data Diagram Garis
+                </h4>
+                <p class="text-sm text-gray-600 mb-4">Menampilkan nilai total untuk setiap entri sebagai garis</p>
+                <canvas id="cumulativeLineChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="bg-white rounded-xl p-6 shadow-lg mb-6 border border-gray-200">
+            <h4 class="text-xl font-bold mb-6 flex items-center gap-2 text-gray-800">
+                <i class="bi bi-table text-gray-500 text-2xl"></i>
+                Data Lengkap
+            </h4>
+            <p class="text-sm text-gray-600 mb-4">Tabel lengkap semua data yang diupload dengan total per baris</p>
+            <div class="overflow-x-auto shadow-sm rounded-lg">
+                <table class="w-full table-auto border-collapse border border-gray-300 text-sm" id="dataTable">
+                    <thead class="bg-gray-800 text-white">
+                        <tr id="tableHeaders">
+                            <!-- Headers will be populated by JavaScript -->
+                        </tr>
+                    </thead>
+                    <tbody id="dataTableBody" class="divide-y divide-gray-200">
+                        <!-- Data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        </div>
+    </div>
+    <% } %>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Data from server
+        const vehicleData = <%- JSON.stringify(data) %>;
+
+        // Process data for charts
+        function processData() {
+            if (!vehicleData || vehicleData.length === 0) return null;
+
+            // Get column names (excluding the first column which we'll use as labels)
+            const columns = Object.keys(vehicleData[0]);
+            const labelColumn = columns[0]; // First column as labels
+            const valueColumns = columns.slice(1); // Rest as values
+
+            // Filter out non-numeric columns for value columns
+            const numericValueColumns = valueColumns.filter(col => {
+                // Check if column has at least some numeric values
+                return vehicleData.some(item => {
+                    const val = parseFloat(item[col]);
+                    return !isNaN(val) && val > 0;
+                });
+            });
+
+            // If no numeric columns found, try to use all columns as values
+            const finalValueColumns = numericValueColumns.length > 0 ? numericValueColumns : valueColumns;
+
+            const labels = vehicleData.map(item => {
+                // Use label column, or fallback to index if empty
+                const label = item[labelColumn] || `Item ${vehicleData.indexOf(item) + 1}`;
+                return label.toString();
+            });
+
+            const totals = vehicleData.map(item => {
+                // Sum all numeric values in the row
+                return finalValueColumns.reduce((sum, col) => {
+                    const val = parseFloat(item[col]) || 0;
+                    return sum + val;
+                }, 0);
+            });
+
+            // Calculate totals for each value column
+            const columnTotals = {};
+            finalValueColumns.forEach(col => {
+                columnTotals[col] = vehicleData.reduce((sum, item) => {
+                    const val = parseFloat(item[col]) || 0;
+                    return sum + val;
+                }, 0);
+            });
+
+            return {
+                labels,
+                totals,
+                columns: finalValueColumns,
+                columnTotals,
+                rawData: vehicleData,
+                labelColumn
+            };
+        }
+
+        // Update metric cards
+        function updateMetrics(data) {
+            if (!data) return;
+
+            const totalRecords = data.labels.length;
+            const totalColumns = data.columns.length;
+
+            document.getElementById('totalRecords').textContent = totalRecords;
+            document.getElementById('totalColumns').textContent = totalColumns;
+        }
+
+        // Create Bar Chart
+        function createDistrictBarChart(data) {
+            const ctx = document.getElementById('districtBarChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Total Nilai',
+                        data: data.totals,
+                        backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { callback: value => value.toLocaleString() }
+                        },
+                        x: { ticks: { maxRotation: 45, minRotation: 45 } }
+                    },
+                    barThickness: 40
+                }
+            });
+        }
+
+        // Create Column Distribution Pie Chart
+        function createVehicleTypePieChart(columnTotals) {
+            const ctx = document.getElementById('vehicleTypePieChart').getContext('2d');
+            const colors = [
+                'rgba(255, 99, 132, 0.8)',
+                'rgba(54, 162, 235, 0.8)',
+                'rgba(255, 205, 86, 0.8)',
+                'rgba(75, 192, 192, 0.8)',
+                'rgba(153, 102, 255, 0.8)',
+                'rgba(255, 159, 64, 0.8)',
+                'rgba(199, 199, 199, 0.8)',
+                'rgba(83, 102, 255, 0.8)'
+            ];
+
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(columnTotals),
+                    datasets: [{
+                        data: Object.values(columnTotals),
+                        backgroundColor: colors,
+                        borderColor: colors.map(color => color.replace('0.8', '1')),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+
+
+
+        // Create Doughnut Chart
+        function createDoughnutChart(columnTotals) {
+            const ctx = document.getElementById('doughnutChart').getContext('2d');
+            const colors = [
+                'rgba(255, 99, 132, 0.8)',
+                'rgba(54, 162, 235, 0.8)',
+                'rgba(255, 205, 86, 0.8)',
+                'rgba(75, 192, 192, 0.8)',
+                'rgba(153, 102, 255, 0.8)',
+                'rgba(255, 159, 64, 0.8)',
+                'rgba(199, 199, 199, 0.8)',
+                'rgba(83, 102, 255, 0.8)'
+            ];
+
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(columnTotals),
+                    datasets: [{
+                        data: Object.values(columnTotals),
+                        backgroundColor: colors,
+                        borderColor: colors.map(color => color.replace('0.8', '1')),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+
+        // Create Area Chart
+        function createAreaChart(data) {
+            const ctx = document.getElementById('areaChart').getContext('2d');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Total Nilai',
+                        data: data.totals,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { callback: value => value.toLocaleString() }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Create Horizontal Bar Chart
+        function createHorizontalBarChart(data) {
+            const ctx = document.getElementById('horizontalBarChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Total Nilai',
+                        data: data.totals,
+                        backgroundColor: 'rgba(255, 99, 132, 0.8)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: { callback: value => value.toLocaleString() }
+                        }
+                    },
+                    barThickness: 40
+                }
+            });
+        }
+
+        // Create Line Chart
+        function createLineChart(data) {
+            const ctx = document.getElementById('cumulativeLineChart').getContext('2d');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Total Nilai',
+                        data: data.totals,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        tension: 0,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { callback: value => value.toLocaleString() }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Populate data table
+        function populateDataTable(data) {
+            // Create dynamic headers
+            const headerRow = document.getElementById('tableHeaders');
+            headerRow.innerHTML = '';
+
+            // Add headers for all columns
+            Object.keys(data.rawData[0]).forEach(col => {
+                const th = document.createElement('th');
+                th.className = 'px-4 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider';
+                th.textContent = col;
+                headerRow.appendChild(th);
+            });
+
+            // Add total column
+            const totalTh = document.createElement('th');
+            totalTh.className = 'px-4 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider font-bold';
+            totalTh.textContent = 'Total';
+            headerRow.appendChild(totalTh);
+
+            // Populate table body
+            const tbody = document.getElementById('dataTableBody');
+            tbody.innerHTML = '';
+
+            data.rawData.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50';
+
+                // Add data cells
+                Object.keys(item).forEach(col => {
+                    const td = document.createElement('td');
+                    td.className = 'px-4 py-2 whitespace-nowrap text-sm text-gray-900';
+                    // Format numeric values
+                    const value = item[col];
+                    const numericValue = parseFloat(value);
+                    td.textContent = !isNaN(numericValue) && numericValue.toString() === value ? numericValue.toLocaleString() : (value || '-');
+                    row.appendChild(td);
+                });
+
+                // Add total cell
+                const totalTd = document.createElement('td');
+                totalTd.className = 'px-4 py-2 whitespace-nowrap text-sm font-bold text-gray-900';
+                totalTd.textContent = data.totals[index].toLocaleString();
+                row.appendChild(totalTd);
+
+                tbody.appendChild(row);
+            });
+        }
+
+        // Chart visibility control
+        function showChart(chartType) {
+            const containers = {
+                bar: 'barChartContainer',
+                pie: 'pieChartContainer',
+                doughnut: 'doughnutChartContainer',
+                area: 'areaChartContainer',
+                horizontal: 'horizontalBarChartContainer',
+                line: 'lineChartContainer'
+            };
+
+            const chartRows = ['barChartContainer', 'pieChartContainer', 'doughnutChartContainer', 'areaChartContainer', 'horizontalBarChartContainer', 'lineChartContainer'];
+
+            // Hide all charts first
+            chartRows.forEach(containerId => {
+                const element = document.getElementById(containerId);
+                if (element) {
+                    element.style.display = 'none';
+                    element.classList.remove('max-w-2xl', 'w-full');
+                }
+            });
+
+            // Reset grid containers to default
+            document.querySelectorAll('.chart-row').forEach(row => {
+                row.className = 'grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6 chart-row';
+            });
+
+            if (chartType !== 'all' && containers[chartType]) {
+                // Show single chart - center it and change parent layout
+                const element = document.getElementById(containers[chartType]);
+                if (element) {
+                    // Find parent row and change its layout
+                    const parentRow = element.closest('.chart-row');
+                    if (parentRow) {
+                        parentRow.className = 'flex justify-center mb-6 chart-row';
+                    }
+
+                    element.style.display = 'block';
+                    element.classList.add('max-w-2xl');
+                }
+            } else if (chartType === 'all') {
+                // Show all charts - use grid layout
+                chartRows.forEach(containerId => {
+                    const element = document.getElementById(containerId);
+                    if (element) {
+                        element.style.display = 'block';
+                        element.classList.remove('max-w-2xl', 'w-full');
+                    }
+                });
+
+                // Reset grid containers to default
+                document.querySelectorAll('.chart-row').forEach(row => {
+                    row.className = 'grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6 chart-row';
+                });
+            }
+        }
+
+        function hideAllCharts() {
+            const containers = [
+                'barChartContainer',
+                'pieChartContainer',
+                'doughnutChartContainer',
+                'areaChartContainer',
+                'horizontalBarChartContainer',
+                'lineChartContainer'
+            ];
+
+            containers.forEach(containerId => {
+                const element = document.getElementById(containerId);
+                if (element) {
+                    element.style.display = 'none';
+                    element.classList.remove('max-w-2xl');
+                }
+            });
+
+            // Reset grid containers to default
+            document.querySelectorAll('.chart-row').forEach(row => {
+                row.className = 'grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6 chart-row';
+            });
+        }
+
+        function showAllCharts() {
+            const containers = [
+                'barChartContainer',
+                'pieChartContainer',
+                'doughnutChartContainer',
+                'areaChartContainer',
+                'horizontalBarChartContainer',
+                'lineChartContainer'
+            ];
+
+            containers.forEach(containerId => {
+                const element = document.getElementById(containerId);
+                if (element) {
+                    element.style.display = 'block';
+                    element.classList.remove('max-w-2xl');
+                }
+            });
+
+            // Reset grid containers to default
+            document.querySelectorAll('.chart-row').forEach(row => {
+                row.className = 'grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6 chart-row';
+            });
+        }
+
+        // Add event listeners to buttons and dropdown
+        document.addEventListener('DOMContentLoaded', function() {
+            const showSelectedBtn = document.getElementById('showSelectedChart');
+            const showAllBtn = document.getElementById('showAllCharts');
+            const hideAllBtn = document.getElementById('hideAllCharts');
+            const chartSelector = document.getElementById('chartSelector');
+
+            if (showSelectedBtn) {
+                showSelectedBtn.addEventListener('click', function() {
+                    const selectedValue = chartSelector.value;
+                    showChart(selectedValue);
+                });
+            }
+
+            if (showAllBtn) {
+                showAllBtn.addEventListener('click', showAllCharts);
+            }
+
+            if (hideAllBtn) {
+                hideAllBtn.addEventListener('click', hideAllCharts);
+            }
+        });
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            const processedData = processData();
+            if (processedData && processedData.labels.length > 0 && processedData.columns.length > 0) {
+                updateMetrics(processedData);
+                createDistrictBarChart(processedData);
+                createVehicleTypePieChart(processedData.columnTotals);
+                createDoughnutChart(processedData.columnTotals);
+                createAreaChart(processedData);
+                createHorizontalBarChart(processedData);
+                createLineChart(processedData);
+                populateDataTable(processedData);
+
+                // Initialize chart visibility after charts are created (show all by default)
+                showAllCharts();
+            } else {
+                console.warn('No valid data to display charts');
+            }
+        });
+    </script>
+</body>
+</html>

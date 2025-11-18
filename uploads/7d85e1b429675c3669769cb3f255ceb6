@@ -1,0 +1,36 @@
+Destinasi,Bulan,Jumlah Wisatawan,Masalah,Solusi yang Diterapkan,Kepuasan Wisatawan (%),Jarak dari Kota (km),Biaya Masuk (IDR),Fasilitas (1-10),Daya Tarik Alam (1-10),Popularitas (1-10)
+Gili Trawangan,7,1860,Kerusakan Lingkungan,Peningkatan akses jalan,90,87,42194,7,9,6
+Pantai Kuta Mandalika,4,12111,Kerusakan Lingkungan,Kampanye edukasi wisatawan,90,6,64735,8,7,7
+Pantai Senggigi,2,6311,Kurangnya Fasilitas,Peningkatan akses jalan,70,80,90305,9,9,6
+Gunung Rinjani,1,9666,Kerusakan Lingkungan,Pembangunan zona konservasi,97,64,64150,7,9,8
+Pulau Seribu,4,2528,Kerusakan Lingkungan,Peningkatan akses jalan,88,11,85038,6,9,6
+Pantai Tanjung Aan,12,11253,Erosi Pantai,Pembangunan zona konservasi,78,94,73148,6,9,9
+Pantai Mawun,12,10670,Kurangnya Fasilitas,Peningkatan akses jalan,77,51,85077,5,9,7
+Selong Belanak,8,8555,Erosi Pantai,Kampanye edukasi wisatawan,75,58,83953,8,7,6
+Bukit Merese,2,7873,Kurangnya Fasilitas,Pembangunan zona konservasi,79,66,37606,8,6,7
+Pantai Pink Lombok,8,8892,Akses Sulit,Pembangunan zona konservasi,84,57,91807,6,6,9
+Danau Segara Anak,12,9571,Akses Sulit,Pembatasan tiket harian,98,19,66228,5,6,8
+Air Terjun Tiu Kelep,9,6463,Overcrowding,Pengelolaan sampah,77,92,53190,7,8,6
+Air Terjun Sendang Gile,8,14986,Kerusakan Lingkungan,Pembatasan tiket harian,96,9,8561,6,6,9
+Pantai Gading,7,9392,Kurangnya Fasilitas,Pembangunan zona konservasi,70,52,40222,9,8,9
+Pantai Semeti,8,11965,Kerusakan Lingkungan,Penambahan fasilitas,70,51,84309,7,6,6
+Taman Wisata Sembalun,10,1502,Sampah Wisatawan,Penambahan fasilitas,78,83,92054,6,7,9
+Pantai Bangko-Bangko,3,1863,Overcrowding,Pengelolaan sampah,98,8,23141,9,8,8
+Pantai Nipah,11,5636,Kurangnya Fasilitas,Peningkatan akses jalan,76,63,98426,8,7,7
+Desa Sade,9,12252,Sampah Wisatawan,Pengelolaan sampah,97,48,30939,7,9,7
+Desa Sukarara,7,6592,Sampah Wisatawan,Pembatasan tiket harian,70,31,66373,5,9,6
+Bukit Pergasingan,9,10474,Sampah Wisatawan,Penambahan fasilitas,78,66,8748,5,8,7
+Pantai Mawi,12,1663,Kerusakan Lingkungan,Kampanye edukasi wisatawan,93,56,59384,5,7,9
+Pantai Ekas,12,4581,Erosi Pantai,Penambahan fasilitas,86,60,98264,7,6,7
+Pantai Batu Payung,2,14877,Akses Sulit,Pembatasan tiket harian,70,23,51717,6,6,9
+Gua Bangkang,10,6791,Sampah Wisatawan,Pengelolaan sampah,92,79,17688,9,9,7
+Tanjung Bloam,6,8125,Kerusakan Lingkungan,Pembatasan tiket harian,78,63,56663,9,8,9
+Pulau Gili Nanggu,12,8098,Kurangnya Fasilitas,Penambahan fasilitas,95,71,16411,8,6,6
+Pulau Gili Sudak,8,6759,Erosi Pantai,Pembatasan tiket harian,80,96,78656,5,7,8
+Pulau Gili Kedis,10,14922,Kurangnya Fasilitas,Pembangunan zona konservasi,85,64,7049,5,9,7
+Pantai Pandanan,12,5548,Akses Sulit,Penambahan fasilitas,92,13,12400,7,8,9
+Pantai Telawas,3,5499,Sampah Wisatawan,Pembatasan tiket harian,93,79,37711,8,7,9
+Pantai Batu Bolong,4,9445,Kerusakan Lingkungan,Kampanye edukasi wisatawan,94,29,73497,6,7,7
+Taman Narmada,3,12983,Akses Sulit,Pembatasan tiket harian,73,37,43467,5,7,6
+Hutan Pusuk,4,10719,Kerusakan Lingkungan,Pembatasan tiket harian,70,52,75091,7,8,7
+Pantai Lancing,7,2045,Sampah Wisatawan,Kampanye edukasi wisatawan,75,55,81213,7,8,7
